@@ -2,6 +2,10 @@
 
 Introduction to Machine Learning course project comparing k-nearest neighbours, k-means with majority-label assignment, and multinomial logistic regression on a 297-row, 13-feature heart disease dataset. The report and its figures are included.
 
+## Course and starting point
+
+[Introduction to machine learning (CS-233)](https://edu.epfl.ch/studyplan/en/bachelor/computer-science/coursebook/introduction-to-machine-learning-CS-233) introduces learning models and their rigorous evaluation on data. This project implements and compares classification and clustering methods in Python, starting from a course method template and the processed feature dataset in `features.npz`.
+
 ## Run
 
 Requires Python 3.10+ and NumPy.

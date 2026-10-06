@@ -1,7 +1,7 @@
 import numpy as np
 
 
-# Generally utilizes
+# Array utilities
 ##################
 def label_to_onehot(labels, C=None):
     """

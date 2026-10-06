@@ -1,35 +1,39 @@
-# Data Description for Project Milestone 1
+# Processed heart disease data
 
-This file aims to provide some information about the processed data itself. It may be useful for description writing and implementing baseline methods. Feel free to delete this file when finally published to moodle.
+This course adaptation of the [UCI Heart Disease dataset](https://archive.ics.uci.edu/dataset/45/heart+disease) uses the processed Cleveland records. Six incomplete records were removed from the original 303 observations, leaving **297 records with 13 features**.
 
-The original dataset is located at [Here](https://archive.ics.uci.edu/dataset/45/heart+disease), contains 13 features and 303 samples.
+The supplied fixed split contains **237 training records and 60 test records**. The NPZ arrays are named `xtrain`, `xtest`, `ytrain`, and `ytest`. Labels are stored as floating-point values representing integer classes; the evaluation loader converts them to integers.
 
-### Processing Steps
-- As the original data has 6 samples that has some fields missing. I manually remove them. So the processed dataset has totally 297 samples.
-- Then I randomly split them into training/test sets with 237/60 samples.
+## Features
 
-### Dataset Statistic
-- It is a 5-class classification problem, with class number from 0 to 4. Note that for the label, I currently save them as **float**. This may cause problem when using cross-entropy loss from torch. (but I think torch is not used in MS1?)
-- For the 13 features, their original meaning could be found at [Here](https://archive.ics.uci.edu/dataset/45/heart+disease). I list their type below. For the categorial features, their possible choices could also be found on the website above.
+The [UCI documentation](https://archive.ics.uci.edu/dataset/45/heart+disease) describes the feature meanings and category values.
 
-| Feature     |    Type     |
-| ----------- | ----------- |
-| age         | integer     |
-| sex         | categorial  |
-| cp          | categorial  |
-| trestbps    | integer     |
-| chol        | integer     |
-| fbs         | categorial  |
-| restecg     | categorial  |
-| thalach     | integer     |
-| exang       | categorial  |
-| oldpeak     | integer     |
-| slope       | categorial  |
-| ca          | integer     |
-| thal        | categorial  |
+| Feature | Type |
+| --- | --- |
+| age | Integer |
+| sex | Categorical |
+| cp | Categorical |
+| trestbps | Integer |
+| chol | Integer |
+| fbs | Categorical |
+| restecg | Categorical |
+| thalach | Integer |
+| exang | Categorical |
+| oldpeak | Real |
+| slope | Categorical |
+| ca | Integer |
+| thal | Categorical |
 
-- the number of each class (0-4) are
-    - training set: [128, 41, 30, 30, 8]
-    - test set: [32, 13, 5, 5, 5] 
+## Class distribution
 
-    so we may need to remind students to think about the imbalanced problem.
+There are five classes, labelled 0 to 4. Label 0 denotes absence of disease.
+
+| Class | Training records | Test records |
+| --- | ---: | ---: |
+| 0 | 128 | 32 |
+| 1 | 41 | 13 |
+| 2 | 30 | 5 |
+| 3 | 30 | 5 |
+| 4 | 8 | 5 |
+
+The imbalance motivates reporting macro F1 and per-class scores alongside accuracy. Attribution and the CC BY 4.0 dataset license are documented in the project README.

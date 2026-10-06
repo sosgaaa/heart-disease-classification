@@ -7,7 +7,7 @@ class KNN(object):
 
     def __init__(self, k=7, task_kind="classification"):
         """
-            Call set_arguments function of this class.
+            Initialize the model configuration.
         """
         self.k = k
         self.task_kind = task_kind
@@ -35,11 +35,7 @@ class KNN(object):
 
     def fit(self, training_data, training_labels):
         """
-            Trains the model, returns predicted labels for training data.
-            Hint: Since KNN does not really have parameters to train, you can try saving the training_data
-            and training_labels as part of the class. This way, when you call the "predict" function
-            with the test_data, you will have already stored the training_data and training_labels
-            in the object.
+            Store copies of the training samples and return their predicted labels.
 
             Arguments:
                 training_data (np.array): training data of shape (N,D)
@@ -47,7 +43,7 @@ class KNN(object):
             Returns:
                 pred_labels (np.array): labels of shape (N,)
         """
-                # copies
+        # Store copies so callers cannot mutate the fitted training data.
         if not 1 <= self.k <= len(training_data):
             raise ValueError("k must be between 1 and the training set size")
         self.training_data = np.copy(training_data)
@@ -88,11 +84,3 @@ class KNN(object):
             test_labels[i] = min(label_weights, key=lambda label: (-label_weights[label], label))
                 
         return test_labels
-
-
-
-
-
-
-
- 

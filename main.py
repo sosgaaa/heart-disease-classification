@@ -25,7 +25,7 @@ def load_dataset(path: Path) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.nda
     return xtrain, xtest, ytrain.astype(int), ytest.astype(int)
 
 
-def preprocess(training: np.ndarray, evaluation: np.ndarray, method: str):
+def preprocess(training: np.ndarray, evaluation: np.ndarray, method: str, feature_count: int | None = None):
     """Fit all transforms on training rows only."""
     mean = training.mean(axis=0)
     std = np.where(training.std(axis=0) == 0, 1, training.std(axis=0))
@@ -38,7 +38,10 @@ def preprocess(training: np.ndarray, evaluation: np.ndarray, method: str):
     span = xtrain.max(axis=0) - minimum
     span = np.where(span == 0, 1, span)
     xtrain, xeval = (xtrain - minimum) / span, (xeval - minimum) / span
-    feature_count = min(xtrain.shape[1], 7 if method == "kmeans" else 10)
+    if feature_count is None:
+        feature_count = min(xtrain.shape[1], 7 if method == "kmeans" else 10)
+    if not 1 <= feature_count <= xtrain.shape[1]:
+        raise ValueError("Feature count must be between 1 and the number of input columns")
     selected = np.argsort(xtrain.var(axis=0))[-feature_count:]
     return xtrain[:, selected], xeval[:, selected]
 
@@ -46,6 +49,8 @@ def preprocess(training: np.ndarray, evaluation: np.ndarray, method: str):
 def stratified_folds(labels: np.ndarray, count: int, seed: int):
     if count < 2:
         raise ValueError("Cross-validation needs at least two folds")
+    if count > np.unique(labels, return_counts=True)[1].min():
+        raise ValueError("Each class must have at least as many samples as folds")
     rng = np.random.default_rng(seed)
     folds = [[] for _ in range(count)]
     for label in np.unique(labels):
@@ -80,6 +85,7 @@ def main() -> None:
     parser.add_argument("--k", type=int, default=None, help="neighbors or clusters")
     parser.add_argument("--lr", type=float, default=0.1)
     parser.add_argument("--max-iters", type=int, default=500)
+    parser.add_argument("--features", type=int, default=None, help="retained features for KNN or K-Means")
     parser.add_argument("--cv-folds", type=int, default=0)
     parser.add_argument("--seed", type=int, default=42)
     args = parser.parse_args()
@@ -92,12 +98,12 @@ def main() -> None:
     if args.cv_folds:
         results = []
         for train_idx, valid_idx in stratified_folds(ytrain, args.cv_folds, args.seed):
-            xfit, xvalid = preprocess(xtrain[train_idx], xtrain[valid_idx], args.method)
+            xfit, xvalid = preprocess(xtrain[train_idx], xtrain[valid_idx], args.method, args.features)
             results.append(evaluate(build_model(args), xfit, ytrain[train_idx], xvalid, ytrain[valid_idx]))
         mean, std = np.mean(results, axis=0), np.std(results, axis=0)
         print(f"CV ({args.cv_folds} folds): accuracy {mean[0]:.2f}% ± {std[0]:.2f}; macro F1 {mean[1]:.3f} ± {std[1]:.3f}")
 
-    xfit, xeval = preprocess(xtrain, xtest, args.method)
+    xfit, xeval = preprocess(xtrain, xtest, args.method, args.features)
     accuracy, f1 = evaluate(build_model(args), xfit, ytrain, xeval, ytest)
     print(f"Test: accuracy {accuracy:.2f}%; macro F1 {f1:.3f}")
 

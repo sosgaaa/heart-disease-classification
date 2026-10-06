@@ -30,3 +30,7 @@ jobs:
           python main.py --method knn --cv-folds 5
           python main.py --method kmeans --cv-folds 5
           python main.py --method logistic_regression --cv-folds 5
+      - name: Reproduce nested evaluation
+        run: python evaluate.py --output /tmp/evaluation.json
+      - name: Verify report tables and plots
+        run: python scripts/sync_report.py --check

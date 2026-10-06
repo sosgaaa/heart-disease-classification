@@ -40,15 +40,15 @@ class LogisticRegression(object):
 
         Arguments:
             training_data (array): training data of shape (N,D)
-            training_labels (array): regression target of shape (N,)
+            training_labels (array): class labels of shape (N,)
         Returns:
-            pred_labels (array): target of shape (N,)
+            pred_labels (array): predicted class labels of shape (N,)
         """
         # Get number of classes and convert labels to one-hot encoding
         n_classes = get_n_classes(training_labels)
         onehot_labels = label_to_onehot(training_labels, n_classes)
         
-        # Add bias term to data
+        # Input data already includes the bias column.
         N, D = training_data.shape
         
         # Initialize weights (including bias)
@@ -83,7 +83,7 @@ class LogisticRegression(object):
         Returns:
             pred_labels (array): labels of shape (N,)
         """
-        # Add bias term to test data
+        # Evaluation data uses the same bias column as training data.
     
         
         # Compute scores using learned weights

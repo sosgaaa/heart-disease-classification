@@ -1,16 +1,34 @@
-# Experiment notebook, without the notebook
+# Experiments
 
-These scripts contain the parameter searches and plots from the course project. Run them from this folder so the relative data paths work:
+Parameter sweeps and plotting scripts for exploring preprocessing, feature counts, validation splits, and model behaviour. Figures from these experiments are stored in `../screens`.
+
+For the model comparison presented in the report, run `python3 evaluate.py` from the repository root. It fits preprocessing inside each fold and selects parameters using training data only.
+
+## Run a script
+
+Install the plotting dependencies from the repository root, then switch to this folder:
 
 ```sh
-python3 -m pip install -e '..[experiments]'
+python3 -m pip install -e '.[experiments]'
+cd experiments
 python3 plot_logistic_params.py --help
 python3 find_best_params.py --help
-python3 main.py --method knn --data_path features.npz --K 7 --test
 ```
 
-The plotting scripts may open a window and write figures to the current folder. For a terminal without a display, use `MPLBACKEND=Agg`.
+Scripts use relative data paths, so run them from `experiments`. Plots may open a window and save images in the current folder. On a machine without a display, set `MPLBACKEND=Agg`.
 
-The `src` folder here belongs to these experiments; the main evaluation code is one level up. The report records the course runs, while the main entry point uses a fixed seed and fits preprocessing separately in each cross-validation fold.
+To reproduce the fixed configurations discussed in the report:
 
-The image-loading and neural-network templates in `src` are separate from the heart disease experiments. They need OpenCV or PyTorch if used; neither is needed for the three classifiers documented in the main README.
+```sh
+python3 main.py --method knn --K 7 --test
+python3 main.py --method kmeans --K 34 --test
+python3 main.py --method logistic_regression --lr 0.1 --max_iters 500 --test
+```
+
+## How to interpret these experiments
+
+These are exploratory runs, with different preprocessing and configurations from the nested-CV comparison. Some scripts fit transforms before splitting or select validation proportions by their scores. The hold-out results for KNN and logistic regression use 15% validation; K-Means uses 22%.
+
+`plot_logistic_params.py` searches using fixed-test accuracy. `plot_logistic_combined.py` selects by the average of CV and fixed-test accuracy. Their scores describe parameter sensitivity on inspected data and should not be interpreted as an independent final evaluation. Use `../evaluate.py` for training-only selection and nested validation.
+
+The local `src` package belongs to these experiments. Its image-loading utilities require OpenCV when used with image datasets; OpenCV is not needed for the three NumPy classifiers.

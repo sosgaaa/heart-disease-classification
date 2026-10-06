@@ -79,7 +79,7 @@ def preprocess_data(xtrain, xtest, method):
     """Preprocess data based on the method being used"""
     # Normalize data for KNN and KMeans
     if method == "knn" or method == "kmeans":
-        # needed data for normalization
+        # Fit standardization statistics on training data.
         means = np.mean(xtrain, axis=0)
         stds = np.std(xtrain, axis=0)
 

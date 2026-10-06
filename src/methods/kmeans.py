@@ -9,7 +9,7 @@ class KMeans(object):
 
     def __init__(self, k=34, max_iters=500, random_state=42):
         """
-        Call set_arguments function of this class.
+        Initialize the model configuration.
         """
         self.k = k  # Number of clusters (if specified)
         self.max_iters = max_iters
@@ -20,13 +20,13 @@ class KMeans(object):
 
     def _compute_distances(self, test_data):
         """
-        Compute pairwise distances between test data and training data.
+        Compute Euclidean distances from evaluation samples to centroids.
 
         Arguments:
             test_data (np.array): test data of shape (N_test, D)
 
         Returns:
-            distances (np.array): distances of shape (N_test, N_train)
+            distances (np.array): distances of shape (N_test, n_clusters)
         """
         if len(test_data.shape) == 1:  # Single point
             test_data = test_data.reshape(1, -1)
@@ -43,10 +43,8 @@ class KMeans(object):
 
     def fit(self, training_data, training_labels):
         """
-        Trains the model, returns predicted labels for training data.
-        Hint:
-            (1) Since Kmeans is unsupervised clustering, we don't need the labels for training. But you may want to use it to determine the number of clusters.
-            (2) Kmeans is sensitive to initialization. You can try multiple random initializations when using this classifier.
+        Fit centroids, map clusters to majority labels, and predict training labels.
+        Labels determine the cluster-to-class mapping after centroid fitting.
 
         Arguments:
             training_data (np.array): training data of shape (N,D)

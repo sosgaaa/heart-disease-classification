@@ -16,7 +16,7 @@ def plot_knn_error(xtrain, ytrain, xtest, ytest, k_values):
     """   
    
     # 2. Normalize data
-    # needed data for normalization
+    # Fit standardization statistics on training data.
     means = np.mean(xtrain, axis=0)
     stds = np.std(xtrain, axis=0)
 

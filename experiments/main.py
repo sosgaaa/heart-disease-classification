@@ -64,8 +64,7 @@ def run_cv(x, y, build_model_fn, metric_fn, param_grid, n_folds, seed=0):
 
 def main(args):
     """
-    The main function of the script. Do not hesitate to play with it
-    and add your own code, visualization, prints, etc!
+    Run an exploratory classification experiment with the requested configuration.
 
     Arguments:
         args (Namespace): arguments that were parsed from the command line (see at the end
@@ -89,7 +88,7 @@ def main(args):
     if not args.test:
         print("\n--- Running in Validation Mode: Testing different validation splits ---")
         validation_percentages = [0.15, 0.18, 0.20, 0.22, 0.25] # Percentages to test
-        # needed data for normalization
+        # Fit standardization statistics on training data.
         means = np.mean(xtrain, axis=0)
         stds = np.std(xtrain, axis=0)
 
@@ -177,7 +176,7 @@ def main(args):
                 xtrain_split_proc = (xtrain_split_proc - min_vals) / range_vals
                 xvalid_split_proc = (xvalid_split_proc - min_vals) / range_vals
 
-                # feature selection based on train split variances (manual selection done by us)
+                # Rank features by variance on the training split.
                 variances = np.var(xtrain_split_proc, axis=0)
                 if args.method == "kmeans":
                     if xtrain_split_proc.shape[1] >= 7:
@@ -255,11 +254,10 @@ def main(args):
 
         print(f"Using {best_split*100:.0f}% validation split with best accuracy: {best_accuracy:.3f}%")
 
-    ### WRITE YOUR CODE HERE to do any other data processing
     # Normalize data for KNN and KMeans
     if args.method == "knn" or args.method == "kmeans":
         
-        # needed data for normalization
+        # Fit standardization statistics on training data.
         means = np.mean(xtrain, axis=0)
         stds = np.std(xtrain, axis=0)
 
@@ -330,11 +328,11 @@ def main(args):
             print(f"→ Using best {args.method} hyper‑parameter K = {args.K}\n")
 
 
-    # Use NN (FOR MS2!)
+    # Neural-network evaluation belongs to the separate image-data component.
     if args.method == "nn":
-        raise NotImplementedError("This will be useful for MS2.")
+        raise NotImplementedError("Neural-network models are outside this project's scope.")
 
-    # Follow the "DummyClassifier" example for your methods
+    # Construct the requested classifier.
     if args.method == "dummy_classifier":
         method_obj = DummyClassifier(arg1=1, arg2=2)
 
@@ -363,7 +361,6 @@ def main(args):
     macrof1 = macrof1_fn(preds, ytest)
     print(f"Test set:  accuracy = {acc:.3f}% - F1-score = {macrof1:.6f}")
 
-    ### WRITE YOUR CODE HERE if you want to add other outputs, visualization, etc.
 
 
 if __name__ == "__main__":
@@ -374,7 +371,7 @@ if __name__ == "__main__":
         "--method",
         default="dummy_classifier",
         type=str,
-        help="dummy_classifier / knn / logistic_regression / kmeans / nn (MS2)",
+        help="dummy_classifier / knn / logistic_regression / kmeans",
     )
     parser.add_argument(
         "--data_path", default="features.npz", type=str, help="path to your dataset"
@@ -403,7 +400,6 @@ if __name__ == "__main__":
         help="train on whole training data and evaluate on the test data, otherwise use a validation set",
     )
 
-    # Feel free to add more arguments here if you need!
 
     parser.add_argument(
     "--cv_folds",

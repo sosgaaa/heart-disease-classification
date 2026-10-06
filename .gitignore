@@ -15,3 +15,10 @@ dist/
 *.pem
 *.key
 .vscode/
+
+# LaTeX build intermediates (the source and final PDF are tracked)
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz

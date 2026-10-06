@@ -80,15 +80,3 @@ def load_features_npz(file_path):
     except KeyError as e:
         print(f"Error: Expected key {e} not found in {file_path}")
         return None, None
-
-
-if __name__ == "__main__":
-    print('Testing data loading...')
-
-    # change skip to downsample the dataset
-    xtrain, xtest, ytrain, ytest = load_data('<PATH TO DIRECTORY>', skip=1)
-
-    print(xtrain.shape, xtest.shape)
-    print(ytrain.shape, ytest.shape)
-
-    print('Done!')

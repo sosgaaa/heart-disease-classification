@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from src.methods.kmeans import KMeans
 from src.utils import normalize_fn, accuracy_fn # Import accuracy_fn directly
 
-# Updated data loading function to match main.py/knn_cv_results_plot.py preprocessing
+# Data loading with the preprocessing used by the experiment scripts.
 def load_data(file_path="features.npz"):
     """
     Loads and preprocesses data from the specified .npz file,
@@ -216,7 +216,7 @@ def main():
     DATA_FILE_PATH = "features.npz"
     # -------------------
 
-    # Load and preprocess data *once* using the updated load_data
+    # Load and preprocess data once.
     x_train, y_train, x_test, y_test = load_data(DATA_FILE_PATH)
 
     # Validation (remains the same)

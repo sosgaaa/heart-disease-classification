@@ -7,3 +7,11 @@ __pycache__/
 build/
 dist/
 .DS_Store
+
+# Local files
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+.vscode/
